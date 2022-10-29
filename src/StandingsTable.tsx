@@ -37,15 +37,17 @@ export default function StandingsTable() {
                     <TableRow>
                         <StyledTableCell align="center">Placing</StyledTableCell>
                         <StyledTableCell align="center">Club</StyledTableCell>
+                        <StyledTableCell align="center">Goals</StyledTableCell>
                         <StyledTableCell align="center">Points</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {Dataset.standings.map((row, index) => (
+                    {Dataset.stats.map((stats, index) => (
                         <StyledTableRow key={index}>
                             <StyledTableCell align="center">{index + 1}</StyledTableCell>
-                            <StyledTableCell align="center">{row.clubName}</StyledTableCell>
-                            <StyledTableCell align="center">{row.points}</StyledTableCell>
+                            <StyledTableCell align="center">{stats.clubName}</StyledTableCell>
+                            <StyledTableCell align="center">{stats.totalNumberOfGoals}</StyledTableCell>
+                            <StyledTableCell align="center">{stats.points}</StyledTableCell>
                         </StyledTableRow>
                     ))}
                 </TableBody>
