@@ -1,13 +1,9 @@
 import * as React from 'react';
-import {Stats} from "fs";
-
-interface Opponents {
-    hostClub: string,
-    guestClub: string,
-}
+import Opponents from "./Opponents";
+import Match from "./Match";
 
 
-const clubs: Array<string> = ['Dinamo Zagreb', 'Hajduk Split', 'Osijek', 'Varaždin', 'Slaven Belupo']
+const clubs: Array<string> = ['Tim-1', 'Tim-2', 'Tim-3', 'Tim-4', 'Tim-5']
 
 function generatePairs(clubs: Array<string>) {
     let clubPairs = new Array<Opponents>()
@@ -23,34 +19,42 @@ function generatePairs(clubs: Array<string>) {
 
 const clubPairs = generatePairs(clubs)
 
-interface Match {
+function createMatch(
+    id: number,
     opponents: Opponents,
     finished: boolean,
     goals: Array<number>,
-}
-
-function createMatch(
-    opponents: Opponents,
-    finished: boolean,
-    goals?: Array<number>,
 ) {
-    return {opponents, finished, goals} as Match
+    return {id, opponents, finished, goals} as Match
 }
 
-const finishedMatches: Array<Match> = [
-    createMatch(clubPairs[0], true, [3, 4]),
-    createMatch(clubPairs[2], true, [0, 0]),
-    createMatch(clubPairs[3], true, [0, 0]),
-    createMatch(clubPairs[4], true, [1, 2]),
-    createMatch(clubPairs[6], true, [2, 0]),
-    createMatch(clubPairs[7], true, [5, 0]),
-    createMatch(clubPairs[11], true, [4, 4]),
-    createMatch(clubPairs[15], true, [1, 1]),
-    createMatch(clubPairs[16], true, [2, 2]),
-    createMatch(clubPairs[17], true, [1, 3]),
-]
+let matches: Array<Match> = []
+clubPairs.forEach((value, index) => matches.push(createMatch(index, value, false, [0, 0])))
 
-console.log(finishedMatches)
+function updateMatchResult(matches: Array<Match>, matchId: number, finished: boolean, goals: Array<number>) {
+    matches[matchId].finished = finished
+    matches[matchId].goals = goals
+    return matches
+}
+
+matches = updateMatchResult(matches, 0, true, [0, 1])
+matches = updateMatchResult(matches, 1, true, [2, 1])
+matches = updateMatchResult(matches, 3, true, [3, 2])
+matches = updateMatchResult(matches, 5, true, [0, 0])
+matches = updateMatchResult(matches, 11, true, [2, 1])
+matches = updateMatchResult(matches, 12, true, [2, 2])
+matches = updateMatchResult(matches, 16, true, [4, 1])
+matches = updateMatchResult(matches, 19, true, [1, 1])
+
+matches.sort(function(a, b){
+    if(a.finished && !b.finished){
+        return -1
+    }else if(!a.finished && b.finished){
+        return 1
+    }else{
+        return 0
+    }
+})
 
 interface ClubStats {
     clubName: string,
@@ -67,23 +71,23 @@ function initializeClubStats(clubs: Array<string>) {
     return clubStats
 }
 
-function calculatePoints(firstClubGoals: number, secondClubGoals: number){
-    if(firstClubGoals > secondClubGoals){
+function calculatePoints(firstClubGoals: number, secondClubGoals: number) {
+    if (firstClubGoals > secondClubGoals) {
         return 3
-    }else if(firstClubGoals < secondClubGoals){
+    } else if (firstClubGoals < secondClubGoals) {
         return 0
-    }else{
+    } else {
         return 1
     }
 }
 
 function updateStandings(clubStats: Array<ClubStats>, match: Match) {
     for (let i = 0; i < clubStats.length; i++) {
-        if(clubStats[i].clubName == match.opponents.hostClub){
+        if (clubStats[i].clubName == match.opponents.hostClub) {
             clubStats[i].totalNumberOfGoals += match.goals[0]
             clubStats[i].points += calculatePoints(match.goals[0], match.goals[1])
         }
-        if(clubStats[i].clubName == match.opponents.guestClub){
+        if (clubStats[i].clubName == match.opponents.guestClub) {
             clubStats[i].totalNumberOfGoals += match.goals[1]
             clubStats[i].points += calculatePoints(match.goals[1], match.goals[0])
         }
@@ -94,7 +98,9 @@ function updateStandings(clubStats: Array<ClubStats>, match: Match) {
 
 let clubStats: Array<ClubStats> = initializeClubStats(clubs)
 
-for(let i = 0; i < finishedMatches.length; i++){
+const finishedMatches = matches.filter(value => value.finished)
+
+for (let i = 0; i < finishedMatches.length; i++) {
     clubStats = updateStandings(clubStats, finishedMatches[i])
 }
 
@@ -106,4 +112,4 @@ const stats = clubStats.sort(function (a, b) {
     }
 });
 
-export default {stats}
+export default {matches, stats}

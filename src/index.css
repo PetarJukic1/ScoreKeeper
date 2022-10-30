@@ -17,3 +17,9 @@ code {
   justify-content: center;
   align-items: center;
 }
+
+.subtitle{
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+}
