@@ -79,7 +79,7 @@ export default function App() {
     const DeleteComments = (roundId: string, commentId: string) => {
         setComments((comments) => {
                 let deleteIndex = comments.findIndex((comment) => comment.id === commentId && roundId === comment.roundId)
-                comments.splice((deleteIndex === undefined) ? 0:deleteIndex, 1)
+                comments.splice((deleteIndex === undefined) ? 0 : deleteIndex, 1)
                 return [...comments]
             }
         );
@@ -199,11 +199,13 @@ export default function App() {
                             )
                             }
                             <Spacer y={3}/>
-                            <div className="commentSection">
-                                <Spacer x={4}/>
-                                <input type="text" ref={commentRef[index]}/>
-                                <button onClick={() => AddComment(rounds.id, index)}>Comment</button>
-                            </div>
+                            {loggedIn &&
+                                (<div className="commentSection">
+                                    <Spacer x={4}/>
+                                    <input type="text" ref={commentRef[index]}/>
+                                    <button onClick={() => AddComment(rounds.id, index)}>Comment</button>
+                                </div>)
+                            }
                         </>
                     )}
                     <MatchList key={index} matches={rounds.matches}/>
