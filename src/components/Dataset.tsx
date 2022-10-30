@@ -2,7 +2,8 @@ import * as React from 'react';
 import Opponents from "./Opponents";
 import Match from "./Match";
 import Rounds from "./Rounds";
-
+import {v4 as uuidv4} from 'uuid';
+import Comment from "./Comment";
 
 const clubs: Array<string> = ['Tim-1', 'Tim-2', 'Tim-3', 'Tim-4', 'Tim-5']
 
@@ -21,7 +22,7 @@ function generatePairs(clubs: Array<string>) {
 const clubPairs = generatePairs(clubs)
 
 function createMatch(
-    id: number,
+    id: string,
     opponents: Opponents,
     finished: boolean,
     goals: Array<number>,
@@ -30,7 +31,7 @@ function createMatch(
 }
 
 let matches: Array<Match> = []
-clubPairs.forEach((value, index) => matches.push(createMatch(index, value, false, [0, 0])))
+clubPairs.forEach((value, index) => matches.push(createMatch(uuidv4(), value, false, [0, 0])))
 
 function updateMatchResult(matches: Array<Match>, matchId: number, finished: boolean, goals: Array<number>) {
     matches[matchId].finished = finished
@@ -47,12 +48,12 @@ matches = updateMatchResult(matches, 5, true, [2, 2])
 matches = updateMatchResult(matches, 6, true, [4, 1])
 matches = updateMatchResult(matches, 7, true, [1, 1])
 
-matches.sort(function(a, b){
-    if(a.finished && !b.finished){
+matches.sort(function (a, b) {
+    if (a.finished && !b.finished) {
         return -1
-    }else if(!a.finished && b.finished){
+    } else if (!a.finished && b.finished) {
         return 1
-    }else{
+    } else {
         return 0
     }
 })
@@ -99,19 +100,46 @@ function updateStandings(clubStats: Array<ClubStats>, match: Match) {
 
 let clubStats: Array<ClubStats> = initializeClubStats(clubs)
 
-const finishedMatches = matches.filter(value => value.finished)
+const matchesByRounds: Array<Rounds> = []
+
+for (let i = 0; i < matches.length; i += 5) {
+    matchesByRounds.push({id: uuidv4(), matches: matches.slice(i, i + 5)})
+}
+
+const comments: Array<Comment> = []
+
+comments.push({
+        roundId: matchesByRounds[0].id,
+        id: uuidv4(),
+        text: "Ajmoo!!",
+        author: "pero.petric@gmail.com",
+        createdAt: new Date('May 03, 2021 05:24:07').toLocaleDateString(),
+    },
+    {
+        roundId: matchesByRounds[0].id,
+        id: uuidv4(),
+        text: "Ajmoo nasi!!",
+        author: "pero@gmail.com",
+        createdAt: new Date('May 04, 2021 05:25:07').toLocaleDateString(),
+    },
+    {
+        roundId: matchesByRounds[0].id,
+        id: uuidv4(),
+        text: "idee!!",
+        author: "petric@gmail.com",
+        createdAt: new Date('May 11, 2021 05:24:07').toLocaleDateString(),
+    }
+)
+
+let finishedMatches: Array<Match> = []
+
+for (let i = 0; i < matchesByRounds.length; i++) {
+    finishedMatches.push(...matchesByRounds[i].matches.filter(value => value.finished))
+}
 
 for (let i = 0; i < finishedMatches.length; i++) {
     clubStats = updateStandings(clubStats, finishedMatches[i])
 }
-
-const matchesByRounds: Array<Rounds> = []
-
-for(let i = 0; i < matches.length; i += 5){
-    matchesByRounds.push({matches: matches.slice(i, i + 5)})
-}
-
-console.log(matchesByRounds)
 
 const stats = clubStats.sort(function (a, b) {
     if (a.points == b.points) {
@@ -121,8 +149,8 @@ const stats = clubStats.sort(function (a, b) {
     }
 });
 
-export const Matches = matches
-
-export const ClubStats = clubStats
+export const ClubStats = stats
 
 export const MatchesByRounds = matchesByRounds
+
+export const Comments = comments

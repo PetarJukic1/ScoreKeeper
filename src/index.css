@@ -51,3 +51,9 @@ code {
   border: 1px solid rgba(104, 85, 224, 1);
   font-size: 20px;
 }
+
+.commentSection{
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+}
