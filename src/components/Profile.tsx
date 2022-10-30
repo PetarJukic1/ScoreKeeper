@@ -13,5 +13,5 @@ export function IsLoggedIn(){
 
 export function GetUsername(){
     const { user } = useAuth0()
-    return user?.email
+    return (user?.email ===  undefined) ? "" : user.email
 }

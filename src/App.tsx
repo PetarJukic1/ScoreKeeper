@@ -2,26 +2,31 @@ import * as React from 'react';
 import StandingsTable from "./components/StandingsTable";
 import Spacer from "./components/Spacer";
 import MatchList from "./components/MatchList";
-import Dataset from "./components/Dataset";
+import {Matches, MatchesByRounds} from "./components/Dataset";
 import LoginButton from "./components/LoginButton";
 import LogoutButton from "./components/LogoutButton";
 import {IsAdmin, IsLoggedIn, GetUsername} from "./components/Profile";
+import RoundList from "./components/RoundList";
+import MatchItem from "./components/MatchItem";
 
 export default function App() {
+    const loggedIn: boolean = IsLoggedIn()
+    const isAdmin: boolean = IsAdmin()
+    const email: string = GetUsername()
     return (
         <>
             <div>
                 <div className="row">
-                    {IsLoggedIn() && (<div>{GetUsername()}</div>)}
-                    {IsAdmin() && (<div>admin</div>)}
+                    {loggedIn && (<div>{email}</div>)}
+                    {isAdmin && (<div>admin</div>)}
 
-                    {IsLoggedIn() && (
+                    {loggedIn && (
                         <div>
                             <LogoutButton/>
                         </div>
                     )}
-                    {!IsLoggedIn() && (<div></div>)}
-                    {!IsLoggedIn() && (
+                    {!loggedIn && (<div></div>)}
+                    {!loggedIn && (
                         <div className="right">
                             <LoginButton/>
                         </div>
@@ -45,13 +50,16 @@ export default function App() {
 
             <Spacer y={4}/>
 
-            <div className="subtitle">
-                <Spacer x={4}/>
+            {MatchesByRounds.map((rounds, index) => (
+                <div>
+                    <div className="subtitle">
+                        <Spacer x={4}/>
 
-                <h2>Matches:</h2>
-            </div>
-
-            <MatchList matches={Dataset.matches}/>
+                        <h2>Round {index +1}:</h2>
+                    </div>
+                    <MatchList key={index} matches={rounds.matches} />
+                </div>
+            ))}
         </>
     );
 }

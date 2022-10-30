@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Opponents from "./Opponents";
 import Match from "./Match";
+import Rounds from "./Rounds";
 
 
 const clubs: Array<string> = ['Tim-1', 'Tim-2', 'Tim-3', 'Tim-4', 'Tim-5']
@@ -39,12 +40,12 @@ function updateMatchResult(matches: Array<Match>, matchId: number, finished: boo
 
 matches = updateMatchResult(matches, 0, true, [0, 1])
 matches = updateMatchResult(matches, 1, true, [2, 1])
-matches = updateMatchResult(matches, 3, true, [3, 2])
-matches = updateMatchResult(matches, 5, true, [0, 0])
-matches = updateMatchResult(matches, 11, true, [2, 1])
-matches = updateMatchResult(matches, 12, true, [2, 2])
-matches = updateMatchResult(matches, 16, true, [4, 1])
-matches = updateMatchResult(matches, 19, true, [1, 1])
+matches = updateMatchResult(matches, 2, true, [3, 2])
+matches = updateMatchResult(matches, 3, true, [0, 0])
+matches = updateMatchResult(matches, 4, true, [2, 1])
+matches = updateMatchResult(matches, 5, true, [2, 2])
+matches = updateMatchResult(matches, 6, true, [4, 1])
+matches = updateMatchResult(matches, 7, true, [1, 1])
 
 matches.sort(function(a, b){
     if(a.finished && !b.finished){
@@ -104,6 +105,14 @@ for (let i = 0; i < finishedMatches.length; i++) {
     clubStats = updateStandings(clubStats, finishedMatches[i])
 }
 
+const matchesByRounds: Array<Rounds> = []
+
+for(let i = 0; i < matches.length; i += 5){
+    matchesByRounds.push({matches: matches.slice(i, i + 5)})
+}
+
+console.log(matchesByRounds)
+
 const stats = clubStats.sort(function (a, b) {
     if (a.points == b.points) {
         return (a.totalNumberOfGoals > b.totalNumberOfGoals ? -1 : 1)
@@ -112,4 +121,8 @@ const stats = clubStats.sort(function (a, b) {
     }
 });
 
-export default {matches, stats}
+export const Matches = matches
+
+export const ClubStats = clubStats
+
+export const MatchesByRounds = matchesByRounds

@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Card from '@mui/material/Card';
-import Dataset from "./Dataset";
+import { ClubStats} from "./Dataset";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -42,7 +42,7 @@ export default function StandingsTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {Dataset.stats.map((stats, index) => (
+                    {ClubStats.map((stats, index) => (
                         <StyledTableRow key={index}>
                             <StyledTableCell align="center">{index + 1}</StyledTableCell>
                             <StyledTableCell align="center">{stats.clubName}</StyledTableCell>

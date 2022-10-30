@@ -73,7 +73,7 @@ const FinishedStyledTableRow = styled(TableRow)(({theme}) => ({
     },
 }));
 
-export default function MatchItem({match}: { match: Match }) {
+export default function MatchItem({match, matchId}: { match: Match, matchId: number }) {
     return (
         <>
             <Spacer y={4}/>
@@ -90,7 +90,7 @@ export default function MatchItem({match}: { match: Match }) {
                         <TableBody>
                                 {match.finished && match.goals[0] > match.goals[1] &&
                                     (
-                                        <FinishedStyledTableRow key={match.id}>
+                                        <FinishedStyledTableRow key={matchId}>
                                             <WonStyledTableCell align="left">{match.opponents.hostClub}</WonStyledTableCell>
                                             <StyledTableCell align="center">{match.goals[0]} : {match.goals[1]}</StyledTableCell>
                                             <LostStyledTableCell align="right">{match.opponents.guestClub}</LostStyledTableCell>
