@@ -18,8 +18,36 @@ code {
   align-items: center;
 }
 
+.right {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.left {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.row {
+  display:flex;
+  flex-direction:row;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
 .subtitle{
   display: flex;
-  justify-content: left;
+  justify-content: center;
   align-items: flex-start;
+}
+
+.loginButton{
+  color: rgb(104, 85, 224);
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(104, 85, 224, 1);
+  font-size: 20px;
 }
